@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Time Prediction</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body style="background: url(https://png.pngtree.com/thumb_back/fw800/background/20190221/ourmid/pngtree-delivery-banner-poster-background-image_12237.jpg); background-size: cover;">
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/home">NM DELIVERY</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/home">Home</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+    <div class="container" style="background: linear-gradient(to right, greenyellow,red); ">
+        <h2>Predict Delivery Time</h2>
+        <form id="delivery-form">
+            <input type="text" id="delivery-distance" placeholder="Enter Delivery Distance" required>
+            <button type="submit">Calculate</button><br>
+            <input type="text" id="predicted-time" placeholder="Predicted Delivery Time" disabled>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('delivery-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const deliveryDistance = document.getElementById('delivery-distance').value;
+
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ delivery_distance: deliveryDistance }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('predicted-time').value = data.predicted_delivery_time.toFixed(2) + ' days';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
